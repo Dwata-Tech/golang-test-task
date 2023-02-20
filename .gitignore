@@ -1,0 +1,9 @@
+.idea/*
+.env
+venv/
+bin/
+portal-file-sharing-service
+build/
+release/
+.vscode
+.make
