@@ -25,3 +25,7 @@ func Migrate() {
 	Instance.AutoMigrate(&model.Comment{})
 	log.Println("Database Migration Completed...")
 }
+
+func CreateArticle(article *model.Article) *gorm.DB {
+	return Instance.Create(&article)
+}

@@ -1,34 +1,58 @@
 package service
 
 import (
+	"bytes"
+	"encoding/gob"
 	"errors"
+	"fmt"
 	"github.com/Dwata-Tech/golang-test-task/database"
 	"github.com/Dwata-Tech/golang-test-task/model"
+	"github.com/Dwata-Tech/golang-test-task/rabbitmq"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 )
 
-func CreateArticleService(article model.Article) (model.Article, int, error) {
+func CreateArticleService(article model.Article) (map[string]string, int, error) {
+	var res = make(map[string]string)
 
 	//request validation
 	if len(article.Title) == 0 {
-		return article, http.StatusBadRequest, errors.New("title can not be null or blank")
+		return res, http.StatusBadRequest, errors.New("title can not be null or blank")
 	}
 
 	if len(article.Content) == 0 {
-		return article, http.StatusBadRequest, errors.New("content can not be null or blank")
+		return res, http.StatusBadRequest, errors.New("content can not be null or blank")
 	}
 
 	if len(article.Nickname) == 0 {
-		return article, http.StatusBadRequest, errors.New("nickname can not be null or blank")
+		return res, http.StatusBadRequest, errors.New("nickname can not be null or blank")
 	}
 
-	res := database.Instance.Create(&article)
-	if res.Error != nil {
-		return article, http.StatusInternalServerError, res.Error
+	err := rabbitmq.PublishMessage(EncodeToBytes(article))
+	if err != nil {
+		return res, http.StatusInternalServerError, err
 	}
-	return article, http.StatusOK, nil
+
+	//res := database.Instance.Create(&article)
+	//if res.Error != nil {
+	//	return article, http.StatusInternalServerError, res.Error
+	//}
+	res["message"] = "Article pushed to queue successfully"
+	return res, http.StatusOK, nil
+}
+
+func EncodeToBytes(p interface{}) []byte {
+
+	buf := bytes.Buffer{}
+	enc := gob.NewEncoder(&buf)
+	err := enc.Encode(p)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("uncompressed size (bytes): ", len(buf.Bytes()))
+	return buf.Bytes()
 }
 
 func GetArticleService(articleId int) (model.Article, int, error) {

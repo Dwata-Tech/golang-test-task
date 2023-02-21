@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/Dwata-Tech/golang-test-task/config"
 	controllers "github.com/Dwata-Tech/golang-test-task/controlller"
 	"github.com/Dwata-Tech/golang-test-task/database"
 	"log"
@@ -16,11 +17,17 @@ var DB *gorm.DB
 func main() {
 
 	// Load Configurations from config.json using Viper
-	LoadAppConfig()
+	config.LoadAppConfig()
 
 	// Initialize Database
-	database.Connect(AppConfig.ConnectionString)
+	database.Connect(config.AppConfig.ConnectionString)
 	database.Migrate()
+
+	//init the rabbitMQ
+	//rabbitmq.Connect()
+
+	////init consumer
+	//rabbitmq.StartConsumer()
 
 	// Initialize the router
 	router := mux.NewRouter().StrictSlash(true)
@@ -28,8 +35,8 @@ func main() {
 	// Register Routes
 	RegisterProductRoutes(router)
 
-	log.Println(fmt.Sprintf("Starting Server on port %s", AppConfig.Port))
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", AppConfig.Port), router))
+	log.Println(fmt.Sprintf("Starting Server on port %s", config.AppConfig.Port))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", config.AppConfig.Port), router))
 }
 
 func RegisterProductRoutes(router *mux.Router) {

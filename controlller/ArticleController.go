@@ -42,6 +42,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetArticleDetails(w http.ResponseWriter, r *http.Request) {
+
 	articleId, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		http.Error(w, "Invalid article ID", http.StatusBadRequest)

@@ -6,5 +6,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="golang-crud-rest-api-main" />
+    <orderEntry type="module" module-name="rabbitmq-go-tutorial-main" />
   </component>
 </module>

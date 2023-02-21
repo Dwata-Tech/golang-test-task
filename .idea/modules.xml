@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$USER_HOME$/Downloads/golang-crud-rest-api-main/.idea/golang-crud-rest-api-main.iml" filepath="$USER_HOME$/Downloads/golang-crud-rest-api-main/.idea/golang-crud-rest-api-main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/golang-test-task.iml" filepath="$PROJECT_DIR$/.idea/golang-test-task.iml" />
+      <module fileurl="file://$USER_HOME$/Downloads/rabbitmq-go-tutorial-main/.idea/rabbitmq-go-tutorial-main.iml" filepath="$USER_HOME$/Downloads/rabbitmq-go-tutorial-main/.idea/rabbitmq-go-tutorial-main.iml" />
     </modules>
   </component>
 </project>
