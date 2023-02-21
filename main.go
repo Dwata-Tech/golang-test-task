@@ -23,10 +23,7 @@ func main() {
 	database.Connect(config.AppConfig.ConnectionString)
 	database.Migrate()
 
-	//init the rabbitMQ
-	//rabbitmq.Connect()
-
-	////init consumer
+	//init consumer
 	//rabbitmq.StartConsumer()
 
 	// Initialize the router
