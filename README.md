@@ -1,0 +1,15 @@
+# Golang Test Task
+
+The project is about simple 5 APIs as below. 
+1. Post /api/article
+2. GET /api/articles
+3. GET /api/article/{id}
+4. POST /api/comment
+5. GET /api/comment/{article_id}
+
+It uses the RabbitMQ for posting article to database. Where producer receives the request from REST API and when consumer receives the messages it saves it into database.
+
+
+# Flow Diagram 
+
+[![](https://mermaid.ink/img/pako:eNp9kk1rwzAMhv-KMJRs0F0GveRQaJsedgjkY7BLLo6jJobE6WyZbYT-99lNQla6TQFj63n1EtkamOgrZCFbrQapJIUwQEANdhiEQSvrhoI1BAbfLSrhcjAE1mDMP99kRU0Qnnhr8ALuW60KNesiyWvNu0KBC26pV7YrUU9nQb2GPXADe91_mDl_5pqkkGeuCDJPs2P-Crvk5R4nHie6r6z4rTpOr-W8LCXF6T0_eHzolbHdb-WRxxEnXnKDhRoFGgWBrsuH581mDfPyOEIf-6ftNgsh6Q3Bzpu1uMDMwcRBW7bSNBCjMbz-wRPH43QRdKMAqJ_agLkPH3E62mVIVivIrRBOf-uW_Y2z__HV_TB1Ei8_cnthPg5OGIWQu_fEuWevXO7Oq1BVbM1cYcdl5SZt8OmCXYesYKHbVnjitqWCFeripPZcccJjJZ0vC0lbXDM_RPmXEvN51ExzxqYx_AZ7TeIo?type=png)](https://mermaid.live/edit#pako:eNp9kk1rwzAMhv-KMJRs0F0GveRQaJsedgjkY7BLLo6jJobE6WyZbYT-99lNQla6TQFj63n1EtkamOgrZCFbrQapJIUwQEANdhiEQSvrhoI1BAbfLSrhcjAE1mDMP99kRU0Qnnhr8ALuW60KNesiyWvNu0KBC26pV7YrUU9nQb2GPXADe91_mDl_5pqkkGeuCDJPs2P-Crvk5R4nHie6r6z4rTpOr-W8LCXF6T0_eHzolbHdb-WRxxEnXnKDhRoFGgWBrsuH581mDfPyOEIf-6ftNgsh6Q3Bzpu1uMDMwcRBW7bSNBCjMbz-wRPH43QRdKMAqJ_agLkPH3E62mVIVivIrRBOf-uW_Y2z__HV_TB1Ei8_cnthPg5OGIWQu_fEuWevXO7Oq1BVbM1cYcdl5SZt8OmCXYesYKHbVnjitqWCFeripPZcccJjJZ0vC0lbXDM_RPmXEvN51ExzxqYx_AZ7TeIo)
