@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
-	"github.com/Dwata-Tech/golang-test-task/database"
 	"github.com/Dwata-Tech/golang-test-task/model"
-	"gorm.io/gorm"
+	"github.com/Dwata-Tech/golang-test-task/service"
+	"github.com/Dwata-Tech/golang-test-task/utils"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 
@@ -15,10 +14,31 @@ import (
 
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	//parse request and handle error
 	var ar model.Article
-	json.NewDecoder(r.Body).Decode(&ar)
-	database.Instance.Create(&ar)
-	json.NewEncoder(w).Encode(ar)
+	err := json.NewDecoder(r.Body).Decode(&ar)
+	if err != nil {
+		logrus.Error("Error: " + err.Error())
+		utils.RespondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	//handle request into service layer
+	res, statusCode, err := service.CreateArticleService(ar)
+	if err != nil {
+		logrus.Error("Error: " + err.Error())
+		utils.RespondError(w, statusCode, err.Error())
+		return
+	}
+
+	//parse to response json and handle error
+	err = json.NewEncoder(w).Encode(res)
+	if err != nil {
+		logrus.Error("Error: " + err.Error())
+		utils.RespondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 }
 
 func GetArticleDetails(w http.ResponseWriter, r *http.Request) {
@@ -28,22 +48,19 @@ func GetArticleDetails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if checkIfProductExists(articleId) == false {
-		json.NewEncoder(w).Encode("Article Not Found!")
-		return
-	}
-	var article model.Article
-	result := database.Instance.First(&article, articleId)
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "Article not found", http.StatusNotFound)
-		return
-	} else if result.Error != nil {
-		fmt.Println(result.Error.Error())
-		http.Error(w, "Error querying database", http.StatusInternalServerError)
+	res, statusCode, err := service.GetArticleService(articleId)
+	if err != nil {
+		logrus.Error("Error: " + err.Error())
+		utils.RespondError(w, statusCode, err.Error())
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(article)
+	err = json.NewEncoder(w).Encode(res)
+	if err != nil {
+		logrus.Error("Error: " + err.Error())
+		utils.RespondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 }
 
 func GetArticlesList(w http.ResponseWriter, r *http.Request) {
@@ -59,22 +76,14 @@ func GetArticlesList(w http.ResponseWriter, r *http.Request) {
 		pageSize = 20
 	}
 
-	// Calculate offset and limit
-	offset := (page - 1) * pageSize
-	limit := pageSize
+	res, statusCode, err := service.GetArticleListService(page, pageSize)
+	if err != nil {
+		logrus.Error("Error: " + err.Error())
+		utils.RespondError(w, statusCode, err.Error())
+		return
+	}
 
-	var articles []model.Article
-	database.Instance.Offset(offset).Limit(limit).Find(&articles)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(articles)
-}
-
-func checkIfProductExists(id int) bool {
-	var article model.Article
-	database.Instance.First(&article, id)
-	if article.ID == 0 {
-		return false
-	}
-	return true
+	json.NewEncoder(w).Encode(res)
 }
